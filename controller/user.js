@@ -17,9 +17,11 @@ exports.signup = (req, res, next) => {
 };
 const jwt = require('jsonwebtoken');   
 exports.login = (req, res, next) => {
+    console.log(req.body);
     User.findOne({ email: req.body.email })
     .then(user => {
         if(!user) {
+            
             return res.status(401).json({ error: 'Utilisateur non trouvé !'});
         }
         bcrypt.compare(req.body.password, user.password)
@@ -39,4 +41,16 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
+};
+
+exports.getOneUser = (req, res, next) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const UserId = jwt.decode(token).userId;
+    User.findOne({_id: UserId})
+    .then(user => res.status(200).json({
+        userId: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin
+    }))
+    .catch(error => res.status(404).json({ error }));
 };

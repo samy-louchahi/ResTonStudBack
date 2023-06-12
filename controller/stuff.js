@@ -2,13 +2,22 @@ const Thing = require('../models/Things');
 const fs = require('fs');
 
 exports.createThing = (req, res, next) => {
-   const thingObject = JSON.parse(req.body.thing);
-   delete thingObject._id;
-   delete thingObject.userId;
-   const thing = new Thing({
-        ...thingObject,
-        cover: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    });
+  console.info(req.files);
+  const coverFile = req.cover;
+  coverFile.mv(`${__dirname}/public/images/${coverFile.name}`, function(err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+  const thingObject = req.body;
+  const userId = req.auth.userId;
+  const thing = new Thing({
+      name : thingObject.name,
+      ville : thingObject.ville,
+      userId : userId,
+      ArtisteCollab : { name : thingObject.ArtisteCollabName, url : thingObject.ArtisteCollabUrl },
+      cover: `${__dirname}/public/images/${coverFile.name}`
+  });
   thing.save()
   .then(
     () => {

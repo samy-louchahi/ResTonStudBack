@@ -6,7 +6,7 @@ const multer = require('../middleware/multerConfig');
 
 
 router.get('/', stuffCtrl.getAllStuff);
-router.post('/',multer, stuffCtrl.createThing);
+router.post('/', stuffCtrl.createThing);
 
 router.get('/:id', auth, stuffCtrl.getOneThing);
 router.put('/:id', auth,multer, stuffCtrl.modifyThing);

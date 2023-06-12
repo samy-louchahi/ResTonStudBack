@@ -6,6 +6,7 @@ const path= require('path');
 
 const stuffRoutes = require('./routes/stuff');
 const userRoutes = require('./routes/user');
+const fileUpload = require('express-fileupload');
 
 mongoose.connect('mongodb+srv://samylouchahi:2001@beatmaker.78dh4sa.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -18,7 +19,7 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
-
+//app.use('api/stuff', fileUpload());
 app.use('/api/stuff', stuffRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
